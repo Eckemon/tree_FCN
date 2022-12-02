@@ -1,0 +1,91 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d3d6b593",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import tensorflow as tf\n",
+    "\n",
+    "def FCN_model(len_classes=5,dropout_rate=0.2):\n",
+    "    \n",
+    "    #input layer\n",
+    "    input_x = tf.keras.layers.Input(shape=(None,None,3))\n",
+    "    \n",
+    "    #A convolution block\n",
+    "    x = tf.keras.layers.Conv2D(filters=32, kernel_size=3,strides=1)(input_x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    #stack of block\n",
+    "    \n",
+    "    x = tf.keras.layers.Conv2D(filters=64, kernel_size=3, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    x = tf.keras.layers.Conv2D(filters=128, kernel_size=3, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    x = tf.keras.layers.Conv2D(filters=256, kernel_size=3, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    x = tf.keras.layers.Conv2D(filters=512, kernel_size=3, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    # Fully connected layer 1\n",
+    "    x = tf.keras.layers.Conv2D(filters=64, kernel_size=1, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.Activation('relu')(x)\n",
+    "    \n",
+    "    # Fully connected layer 2\n",
+    "    x = tf.keras.layers.Conv2D(filters=len_classes, kernel_size=1, strides=1)(x)\n",
+    "    x = tf.keras.layers.Dropout(dropout_rate)(x)\n",
+    "    x = tf.keras.layers.BatchNormalization()(x)\n",
+    "    x = tf.keras.layers.GlobalMaxPool2D()(x)\n",
+    "    x = tf.keras.layers.Activation('softmax')(x)\n",
+    "    \n",
+    "    model = tf.keras.Model(inputs=input_x, outputs=predictions)\n",
+    "    \n",
+    "    print(model.summary())\n",
+    "    print(f'Total number of layers: {len(model.layers)}')\n",
+    "    \n",
+    "    return model\n",
+    "\n",
+    "if __name__ = \"__main__\":\n",
+    "    FCN_model(len_classes=5,dropout_rate=0.2)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda env:tensorflow] *",
+   "language": "python",
+   "name": "conda-env-tensorflow-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
